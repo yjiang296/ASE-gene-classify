@@ -6,3 +6,5 @@
 ###### Then, <classify_parent_specific_gene_MODIFIED.py> was used to count reads that support hap1 or hap2 specific expression.
 ###### Based on the reads count, we conducted binomial distribution hypothesis testing and Multiple hypothesis testing to classify hap1 or hap2 specific expression genes by <binom_fdr.R>.
 ###### Finally, <plot.R> was used to draw the scatter plots.
+
+![流程图1 drawio](https://user-images.githubusercontent.com/115337217/212926971-0587592c-8395-40f1-9ab9-4e5c7af23972.png)
