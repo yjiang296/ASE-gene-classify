@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import sys
 import os
-snp = sys.argv[1]
+snp = sys.argv[1] 
+#an example line: chr10    2672    T       C
+#chr    primary_coord    primary_genotype        alternative_genotype
 pileup = sys.argv[2]
 intersect = sys.argv[3]
 
@@ -21,4 +23,4 @@ for i in f2:
                 f3.writelines(a+'\t'+loc[a]+'\t'+i[2]+'\t'+i[3]+'\t'+i[4]+'\t'+i[5]+'\n')
 
 #usage python get_intersect.pileup.py <SNPs> <pileup> <pileup.intersect>
-#python ../get_intersect.pileup.py ../contig_hap2_ragtag_hap1_dnadiff.SNPs endosperm.graph.wo0.pileup endosperm.graph.wo0.pileup.intersect
+#python ../get_intersect.pileup.py ../contig_hap2_ragtag_hap1_dnadiff.SNPs seedling.graph.pileup seedling.graph.pileup.intersect
