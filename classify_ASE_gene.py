@@ -94,18 +94,18 @@ if __name__ == '__main__':
         
         # print(join_table)
 
-        for r, line_list in tqdm(join_table.items(), desc='Counting hap1_count&hap2_count'):
+        for r, line_list in tqdm(join_table.items(), desc='Counting primary_count&alternative_count'):
             reads_count = 0
             i = f1_2[r]
             js = [f2_2[j_index] for j_index in line_list]
             for j in js:
                 reads_count += int(j[-3])
             if reads_count >= 1:
-                hap1_count = 0
-                hap2_count = 0
+                primary_count = 0
+                alternative_count = 0
                 for j in js:
-                    hap1_count += j[-2].count('.') + j[-2].count(',')
-                    hap2_count += j[-2].count('a') + j[-2].count('A') + \
+                    primary_count += j[-2].count('.') + j[-2].count(',')
+                    alternative_count += j[-2].count('a') + j[-2].count('A') + \
                             j[-2].count('c') + j[-2].count('C') + \
                             j[-2].count('g') + j[-2].count('G') + \
                             j[-2].count('t') + j[-2].count('T')
@@ -113,12 +113,13 @@ if __name__ == '__main__':
                 with open(out,'a') as f3:
                     if reads_count >= 0:
                             #print(i[3]+'\t'+loc[i[3]]+'\t'+B+'\t'+M+'\t'+status[0])
-                            f3.write(i[3]+'\t'+i[0]+'\t'+i[1]+'\t'+i[2]+'\t'+repr(hap1_count)+'\t'+repr(hap2_count)+'\n')
+                            f3.write(i[3]+'\t'+i[0]+'\t'+i[1]+'\t'+i[2]+'\t'+str(len(js))+'\t'+repr(primary_count)+'\t'+repr(alternative_count)+'\n')
 
 
 
 
 ####----------------info--------------------####
 #author:yjiang yjiang22@dingtalk.com
-#usage: python classify_parent_specific_gene_MODIFIED.py <gene_bedfile> <pileup.intersect> <OUT.csv>
-#example : python classify_parent_specific_gene_MODIFIED.py final_annotation_gene.bed seed.771.gene.5kb.snp.indel.sv.mapped.q10.sorted.rmdup.wo0.pileup.intersect seed.771.gene.5kb.snp.indel.sv_classification.csv
+#usage: python classify_ASE_gene.py <gene_bedfile> <*pileup.intersect> <OUT.csv>
+#example : python classify_AES_gene.py final_annotation_gene.bed seedling.graph.pileup.intersect seedling.graph.count.csv
+
