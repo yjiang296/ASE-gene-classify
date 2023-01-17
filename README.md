@@ -10,7 +10,7 @@
 ###### example:
 ###### python classify_ASE_gene.py final_annotation_gene.bed seedling.graph.pileup.intersect seedling.graph_count.csv
 
-###### (4) Based on the reads count, we conducted binomial distribution hypothesis testing and Multiple hypothesis testing to classify primary or altenative assembly specific expression genes by <binom_fdr.R>.
+###### (4) Based on the reads count, we conducted binomial distribution hypothesis testing and multiple hypothesis testing to classify primary or altenative assembly specific expression genes by <binom_fdr.R>.
 
 
 ![流程图1 drawio](https://user-images.githubusercontent.com/115337217/212926971-0587592c-8395-40f1-9ab9-4e5c7af23972.png)
