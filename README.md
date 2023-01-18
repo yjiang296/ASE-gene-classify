@@ -1,4 +1,4 @@
-# Parental-specific-expression-gene-classify
+# Allele-specific-expression-gene-classify
 
 #### These scripts are used to handle Hisat2's output bam file to classify parental specific expression genes.
 ###### (1) we used samtools(1.3.1) mpileup to get the detailed mapping information at each base.
