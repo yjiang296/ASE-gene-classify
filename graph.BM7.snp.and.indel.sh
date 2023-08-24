@@ -9,15 +9,12 @@ scripts_get_intersect_pileup_py=/data21/yjiang22/hybrid_hap_graph_application/sc
 scripts_extract_snp_with_10more_valid_reads_py=/data21/yjiang22/hybrid_hap_graph_application/scripts/extract_snp_with_10more_valid_reads.py
 scripts_classify_ASE_gene_py=/data21/yjiang22/hybrid_hap_graph_application/scripts/classify_ASE_gene.py
 scripts_ASE_snp_py=/data21/yjiang22/hybrid_hap_graph_application/scripts/classify_ASE_snp.py
-scripts_binom_fdr_R=/data21/yjiang22/new_hybrid_hap_graph_BM/scripts/binom_fdr.R
 scripts_chisq_BH_R=/data21/yjiang22/new_hybrid_hap_graph_BM/scripts/chisq_BH.R
-scripts_label_fdr_csv_py=/data21/yjiang22/hybrid_hap_graph_application/scripts/label_fdr_csv.py
 scripts_label_sig_less90per_nosig_py=/data21/yjiang22/hybrid_hap_graph_application/scripts/label_sig_less90per_nosig.py
-scripts_filter_eFDR_R=/data21/yjiang22/hybrid_hap_graph_application/scripts/filter_eFDR.R
 scripts_extract_ASE_gene_with_all_same_hap_snp_py=/data21/yjiang22/hybrid_hap_graph_application/scripts/extract_ASE_gene_with_all_same_hap_snp.py
 scripts_extract_NM_from_bam_py=/data21/yjiang22/new_hybrid_hap_graph_BM/scripts/extract_mismatch_NM_from_bam.py
 
-PATH_to_relative_R_WD=./allele-specific-gene/graph_snp_and_indel/BM7  ##need to be modified
+PATH_to_relative_R_WD=./allele-specific-gene/graph_snp_and_indel/BM7  ##needs to be modified
 
 DAP=7
 
