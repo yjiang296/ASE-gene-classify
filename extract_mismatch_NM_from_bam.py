@@ -4,10 +4,10 @@ PATH_to_bam_file=sys.argv[1]
 
 bam_file = PATH_to_bam_file
 def extract_NM_from_bam(bam_file):
-    # 打开BAM文件
+
     bam = pysam.AlignmentFile(bam_file, "rb")
 
-    # 遍历所有的reads并提取MD或NM标签信息
+    # Iterate over all reads and extract MD or NM label information
     NM_list = []
     for read in bam.fetch():
         if read.has_tag("NM"):
@@ -17,12 +17,10 @@ def extract_NM_from_bam(bam_file):
             except KeyError:
                 continue
 
-    # 关闭BAM文件
     bam.close()
 
     return NM_list
 
-# 示例用法
 
 NM_list = extract_NM_from_bam(bam_file)
 print(NM_list)
