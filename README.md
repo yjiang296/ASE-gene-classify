@@ -1,10 +1,10 @@
 # Allele-specific-expression-gene-classify
 
-#### These scripts are used to handle Hisat2's output bam file to classify parental specific expression genes.
-###### (1) we used samtools(1.3.1) mpileup to get the detailed mapping information at each base.
+#### These scripts are used to handle Hisat2's output bam file to identify allele-specific-expression(ASE) genes.
+###### (1) we used samtools(1.18) mpileup to get the detailed mapping information at each base with parameters '--no-output-ins --no-output-ins --no-output-del --no-output-del --no-output-ends'.
 ###### example:
 ###### bedtools bamtobed -i seedling.graph.bam > seedling.graph.bed
-###### samtools mpileup -l seedling.graph.bed -f ../ragtag.scaffold.fasta seedling.graph.bam -o seedling.graph.pileup
+###### samtools mpileup --no-output-ins --no-output-ins --no-output-del --no-output-del --no-output-ends -l seedling.graph.bed -f ../ragtag.scaffold.fasta seedling.graph.bam -o seedling.graph.pileup
 ###### (2) <get_intersect.pileup.py> was used to handle samtools mpileup output file to further extract the mapping information at the SNP sites between primary and alternative assembly.
 ###### (3) <classify_ASE_gene.py> was used to count reads that support primary or altenative assembly specific expression.
 ###### example:
