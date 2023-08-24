@@ -119,7 +119,6 @@ if __name__ == '__main__':
 
 
 ####----------------info--------------------####
-#author:yjiang yjiang22@dingtalk.com
+#yjiang yjiang22@dingtalk.com
 #usage: python classify_ASE_gene.py <gene_bedfile> <*pileup.intersect> <OUT.csv>
 #example : python classify_AES_gene.py final_annotation_gene.bed seedling.graph.pileup.intersect seedling.graph.count.csv
-
