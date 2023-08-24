@@ -7,7 +7,7 @@ gene_bedfile = sys.argv[1]
 intersect = sys.argv[2]
 out = sys.argv[3]
 
-#status = ['B_type','M_type','Balanced']
+#status = ['hap1_type','hap2_type','Balanced']
 
 def binary_search(set, num):
     tmp = [r[1] for r in set]
@@ -119,6 +119,6 @@ if __name__ == '__main__':
 
 
 ####----------------info--------------------####
-#yjiang yjiang22@dingtalk.com
+#yjiang22@dingtalk.com
 #usage: python classify_ASE_gene.py <gene_bedfile> <*pileup.intersect> <OUT.csv>
 #example : python classify_AES_gene.py final_annotation_gene.bed seedling.graph.pileup.intersect seedling.graph.count.csv
