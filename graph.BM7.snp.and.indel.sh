@@ -35,7 +35,7 @@ stringtie -p 30 -G /data21/yjiang22/hybrid_hap_graph_application/EVM.all_1new.gt
 #step1 samtools mpileup
 bedtools bamtobed -i graph.BM-${DAP}DAP.q30.sort.bam > graph.BM-${DAP}DAP.q30.sort.bed && echo '--step1.1 bam2bed done--'
 
-source activate base ## base下面重新安装了samtool1.18，旧版本unrecognize mpileup新加的参数
+source activate base ## samtool1.18，older version of samtools cannot recognize --no-output-** parameters
 samtools mpileup --no-output-ins --no-output-ins --no-output-del --no-output-del --no-output-ends -l graph.BM-${DAP}DAP.q30.sort.bed -f /data21/yjiang22/hybrid_hap_graph_application/ASE_analysis/hisat2_build_new/hap1_1to10.fa graph.BM-${DAP}DAP.q30.sort.bam -o graph.BM-${DAP}DAP.q30.sort.pileup && echo '--step1.2 mpileup done--'
 
 #step2 extract mapping info at snp sites
@@ -43,8 +43,7 @@ samtools mpileup --no-output-ins --no-output-ins --no-output-del --no-output-del
 awk '$4!=0 {print $0}' graph.BM-${DAP}DAP.q30.sort.pileup > graph.BM-${DAP}DAP.q30.sort.wo0.pileup && echo "--step2.1 graph.BM-${DAP}DAP awk wo0 done---"
 mv graph.BM-${DAP}DAP.q30.sort.wo0.pileup graph.BM-${DAP}DAP.q30.sort.pileup ##save storage space
 
-##只考虑gene exon上snp处的reads
-touch graph.BM-${DAP}DAP.q30.sort.pileup.intersect.exon;rm graph.BM-${DAP}DAP.q30.sort.pileup.intersect.exon #防止下一步追加写
+##only snps in exon are considered
 
 python ${scripts_get_intersect_pileup_py} /data21/yjiang22/new_hybrid_hap_graph_BM/hisat2_index/snp_filter/03_remove_HIFI_non_heterozygous/hap1_hap2.snps.rm.ajacent.with3more.hifi.heterozygous.in.exon graph.BM-${DAP}DAP.q30.sort.pileup graph.BM-${DAP}DAP.q30.sort.pileup.intersect.exon && echo '--step2.2 intersect done---'
 
@@ -52,31 +51,9 @@ python ${scripts_extract_snp_with_10more_valid_reads_py} graph.BM-${DAP}DAP.q30.
 
 python ${scripts_ASE_snp_py} graph.BM-${DAP}DAP.q30.sort.pileup.intersect.exon.with10more.valid.reads graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.csv
 
-##注意，hap1 hap2是反的
 sed -i '1i chr\tsite\thap1_geno\thap2_geno\treads_count\tvalid_reads_count\thap1_count\thap2_count\thap1_ratio\thap2_ratio' graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.csv 
 
-### binom --> FDR
-
-Rscript ${scripts_binom_fdr_R} ${PATH_to_relative_R_WD}/graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.csv ${PATH_to_relative_R_WD}/graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.fdr.csv
-
-#final choice
-grep -v 'site' graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.fdr.csv | awk -F ',' '{if($9 >= 0.9 && $12 <= 0.01) print $1,$2,$2,"hap1_type"}'  | tr ' ' '\t' > graph.fdr.hap1_type.snp
-grep -v 'site' graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.fdr.csv | awk -F ',' '{if($10 >= 0.9 && $14 <= 0.01) print $1,$2,$2,"hap2_type"}'  | tr ' ' '\t' > graph.fdr.hap2_type.snp
-
-#  wc -l hap1.ref.hap1_type.snp hap1.ref.hap2_type.snp
-
-cat graph.fdr.hap1_type.snp graph.fdr.hap2_type.snp | sort -k1.4,1n -k2,2n > graph.fdr.allele-specific.snp
-bedtools intersect -a /data21/yjiang22/hybrid_hap_graph_application/hap1.chr.gene.bed -b graph.fdr.allele-specific.snp -wao > graph.fdr.genes.allele-specific-snp.wao
-grep -v '\-1' graph.fdr.genes.allele-specific-snp.wao > graph.fdr.genes.allele-specific-snp.wao1
-python ${scripts_extract_ASE_gene_with_all_same_hap_snp_py} graph.fdr.genes.allele-specific-snp.wao1 graph.fdr.ase.gene.hap.snp.count.csv
-
-awk '{ if($2=="0") print $0}' graph.fdr.ase.gene.hap.snp.count.csv > graph.fdr.ase.gene.hap2.snp.count
-awk '{ if($3=="0") print $0}' graph.fdr.ase.gene.hap.snp.count.csv > graph.fdr.ase.gene.hap1.snp.count
-
-awk '{ if($2 >= 3) print $0}' graph.fdr.ase.gene.hap1.snp.count > graph.fdr.ase.gene.hap1.snp.count.3more
-awk '{ if($3 >= 3) print $0}' graph.fdr.ase.gene.hap2.snp.count > graph.fdr.ase.gene.hap2.snp.count.3more
-
-### chisq --> BH
+### chisq --> BH adjust p value
 
 source activate r4.2
 #Rscript ${scripts_binom_fdr_R} ${PATH_to_relative_binom_fdr_R_WD}/graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.csv ${PATH_to_relative_binom_fdr_R_WD}/graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.fdr.csv && echo '--step4 binom.R done--' #这里的csv文件目录要相对于binom.R来写
@@ -84,7 +61,6 @@ Rscript ${scripts_chisq_BH_R} ${PATH_to_relative_R_WD}/graph.BM-${DAP}DAP.exon.w
 
 source activate base
 
-#final choice
 grep -v 'site' graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.BH.csv | awk -F ',' '{if($9 >= 0.9 && $12 <= 0.01) print $1,$2,$2,"hap1_type"}'  | tr ' ' '\t' > graph.BH.hap1_type.snp
 grep -v 'site' graph.BM-${DAP}DAP.exon.with10more.valid.reads.count.BH.csv | awk -F ',' '{if($10 >= 0.9 && $12 <= 0.01) print $1,$2,$2,"hap2_type"}'  | tr ' ' '\t' > graph.BH.hap2_type.snp
 
@@ -101,8 +77,7 @@ awk '{ if($3=="0") print $0}' graph.BH.ase.gene.hap.snp.count.csv > graph.BH.ase
 awk '{ if($2 >= 3) print $0}' graph.BH.ase.gene.hap1.snp.count > graph.BH.ase.gene.hap1.snp.count.3more
 awk '{ if($3 >= 3) print $0}' graph.BH.ase.gene.hap2.snp.count > graph.BH.ase.gene.hap2.snp.count.3more
 
-
-##从bam文件提取mismatch信息
+##extract mismatch information from bam file
 
 python ${scripts_extract_NM_from_bam_py} graph.BM-${DAP}DAP.q30.sort.bam > graph.BM-${DAP}DAP.q30.sort.bam.NM
 sed -i 's/\[//' graph.BM-${DAP}DAP.q30.sort.bam.NM
